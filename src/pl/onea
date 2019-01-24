@@ -187,6 +187,8 @@ testNepotism :-
 
 had(X and Y)      :- had(X), had(Y).
 had(X =Id had Y)  :- fact(X,Id,Fs),  b4(Y,Fs).
+had(X or _Y) :- had(X).
+had(_X or Y) :- had(Y).
 
 b4(X had Y,Fs)    :- b4(X,Fs), b4(Y,Fs).
 b4(X =  Y, Fs)    :- member(X=Y,Fs).
@@ -338,4 +340,4 @@ allOps :- setof([P,A,X],current_op(P,A,X),L), prints(L).
 %[1200,xfx,:-]
 
 :- main.
-%:- halt.
+:- halt.
