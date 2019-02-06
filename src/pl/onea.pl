@@ -15,22 +15,6 @@ fact(emp,jane,     [job=president]).
 fact(job,cleaner,  [salary=10000]).
 fact(job,professor,[salary=30000]).
 
-% for example, let me show you how i got this job
-%
-% rule nepotism 
-% if   
-%      emp = E had job=J had mother in [president,chancellor] and
-%      job = J had salary =< 10000 and
-%      job = J2 had salary > 20000
-% then
-%      emp =E has job = J2.
-% %
-
-% To achieve this task, take 6 small steps
-% If it works, you should be able to load the code with zero
-% load-time errors and all the testN predicates working without
-% getting "failed(X)" errors
-
 main:- tests, testNepotism.
 % Expected output
 %
@@ -63,19 +47,19 @@ main:- tests, testNepotism.
 % Define operators such that the following rules does NOT generate an
 % error when prolog loads it.
 
-% Hints: don't go above 999 (bad things happen).
+% Hints: dont go above 999 (bad things happen).
 % Hints: if you stay above 700 then the standard arithmetics can be inside 
-% Hints: for trivial little prefix, ostfix markers, use 1
+% Hints: for trivial little prefix, postfix markers, use 1
 
-:- op(999,fx,   rule).
-:- op(902,xfx,  if).
-:- op(901,xfx,  then).
-:- op(899,xfy,  or).
-:- op(898,xfy,  and).
-:- op(850,fx,   not).
-:- op(830,xfy,  had).
-:- op(830,xfy,  has).
-:- op(700,xfy,  in).
+:- op(1, fx, rule).
+:- op(897, yfx, in).
+:- op(898, xfy, had).
+:- op(899, fx, not).
+:- op(900, yfx, and).
+:- op(900, yfx, or).
+:- op(901, xfx, if).
+:- op(902, xfx, then).
+:- op(903, xfx, has).
 
 rule1 if a then b.
 
@@ -95,46 +79,45 @@ rule 8 if a or b and c and d or not e then f.
 
 rule 9 if a or not (b and c and d) or e then f.
 
-rule 10 if emp had job=_ then b.
+rule 10 if emp had job = _ then b.
 
 % the the left of the first had, we match on functor and id
 % "=" is inside "had"
-rule 11 if emp = _ had job =_ then b.
-
+rule 11 if emp = _ had job = _ then b.
 
 % "X had Y" is inside "or"
-rule 12 if a or emp = _ had job=_ then b.
+rule 12 if a or emp = _ had job = _ then b.
 
-% "X had Y" is inside "amd"
-rule 13 if a or b and emp = _ had job=_ then c.
+% "X had Y" is inside "and"
+rule 13 if a or b and emp = _ had job = _ then c.
 
 % there can be multiple "had" tests
-rule 14 if a or b and emp = _ had job=_ had mother = _ then c.
+rule 14 if a or b and emp = _ had job = _ had mother = _ then c.
 
 % "in" is a keyword for set membership
-rule 15 if emp = _ had job=_ had mother in [president,chancellor]  then c.
+rule 15 if emp = _ had job = _ had mother in [president,chancellor] then c.
 
 % inside a had, tests are "=", "\=", ">", "<", ">=", "=<"
 rule 16 if  
-     emp = _ had job=J had mother in [president,chancellor] and
+     emp = _ had job = J had mother in [president,chancellor] and
      job = J had salary =< 10000 
 then c.
 
 % "has" does updates.
 % but this time, "=" means "change that field"  (and  "in,<,>,\=" etc are
-% not supported"
+% not supported
 
 rule nepotism 
 if   
-     emp = E had job=J had mother in [president,chancellor] and
+     emp = E had job = J had mother in [president,chancellor] and
      job = J had salary =< 10000 and
      job = J2 had salary > 20000
 then
-     emp =E has job = J2.
+     emp = E has job = J2.
 
 % 222222222222222222222222222222222222222222222222222222222222
 
-% Get rule conditon testing on solo facts to work.
+% Get rule condition testing on solo facts to work.
 % hint: implement right associative "had". see has(X and Y)
 % for an example on how that is done
 
@@ -151,7 +134,7 @@ test(11).
 
 % 3333333333333333333333333333333333333333333333333333333333
 
-% Add testing for set membership to they ssytem
+% Add testing for set membership to the system
 % Hint: extend the "b4" clauses
 
 test(15).
@@ -185,13 +168,15 @@ testNepotism :-
 % you should use the following code.
 % WARNING: the code for "had" is incomplete
 
-had(X and Y)      :- had(X), had(Y).
-had(X =Id had Y)  :- fact(X,Id,Fs),  b4(Y,Fs).
-had(X or _Y) :- had(X).
-had(_X or Y) :- had(Y).
 
-b4(X had Y,Fs)    :- b4(X,Fs), b4(Y,Fs).
-b4(X =  Y, Fs)    :- member(X=Y,Fs).
+had(X and Y)                :- had(X), had(Y).
+had(X or Y)                 :- had(X) | had(Y).
+had(X = Id had Y)           :- fact(X, Id, Fs),  member(Y, Fs).
+had(X = Id had Y had Z)     :- had(X = Id had Y), had(X = Id had Z).
+had(X = Id had Y in [A|B])  :- had(X = Id had Y = A) | had(X = Id had Y = B).
+had(X = Id had Y =< Jd)     :- fact(X, Id, Fs),  member(Y = Z, Fs), Z =< Jd.
+had(X = Id had Y > Jd)      :- fact(X, Id, Fs),  member(Y = Z, Fs), Z > Jd.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is a complete implementation of "has"
@@ -211,62 +196,15 @@ switch([Y=Old  | T0], X=New, [Y=Old|T]) :-
    X \= Y,
    switch(T0,X=New,T).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% To run this tutorial first isntall prolog
-%
-%	sudo apt-get install swi-prolog
-% 
-% Next, split the screen with an editor on one side and a shell on the other.
-%
-% Next, make these files executable
-%
-%       chmod +x onea
-%       chmod +x errors
-%
-% Then run the file in the shell, find errors, fix then in the editor, re-run
-%
-%	./onea
-%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Ieally, complete this assignment with code that has no load errors.
-% For an example of load errors, run ./errors
-
-% You will see
-%
-% Warning: /home/cabox/gits/txt/plm19/src/pl/errors:6:
-%             Singleton variables: [X]
-% ERROR: /home/cabox/gits/txt/plm19/src/pl/errors:12:7: Syntax error: Operator expected
-% ERROR: /home/cabox/gits/txt/plm19/src/pl/errors:17:7: Syntax error: Operator expected
-%
-% Also, sometimes Prolog will catch a one letter typo in your predicates.
-% IF that happens you will see:
-
-% Warning: The predicates below are not defined. If these are defined
-% Warning: at runtime using assert/1, use :- dynamic Name/Arity.
-% Warning:
-% Warning: has/1, which is referenced by
-% Warning:        /home/cabox/gits/txt/plm19/src/pl/onea:231:2: 1-st clause of think/0
-% 
-
-
-% using the REPL (kill the halt)
-
-% load [onea]
-% make
-% spy
-% curse of assert, retract
-% curse of the knowledge base
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% BTW, ypu will need this table.
+% BTW, you will need this table.
 % current_op reports current definitions.
 
 prints([]).    % termination
 prints([H|T]) :- 
    print(H), nl,  % handle one thing
    prints(T).     % recurse to handle the rest
-
 
 % setof collects, and sorts, results.
 allOps :- setof([P,A,X],current_op(P,A,X),L), prints(L).
