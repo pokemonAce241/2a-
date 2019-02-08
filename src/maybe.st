@@ -200,6 +200,22 @@ goodB4Now
   #(10 21 32 43 54) b4Now: [:b4 :now|
     ((now-b4)/b4) asFloat oo] !!
 
+  "-------------------1b4. Polymorphism----------------------"
+  ! Collection methods !
+  visit: aBlock
+    self do: aBlock
+  !!
+
+  ! String methodsFor: 'visit' !
+  visit: aBlock
+   aBlock value: self
+  !!
+
+  ! Object methods !
+  visit: aBlock
+   aBlock value: self
+  !!
+
 
 ! Object class methodsFor: 'testing' !
 goodVisit
