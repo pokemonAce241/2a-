@@ -1,0 +1,36 @@
+1a. 
+In lisp, an association list is a data structure that maps keys to values and also supports reverse lookups, finding the key when given the value.
+
+1b. 
+In the example, the function `assoc` creates an association list by the name of 'r', which maps keys to values such as 'a' to 'b', 'c' to 'd', and so on.
+
+1c. 
+The lisp function "mapcan" operates on successive elements of the lists. The specified function is applied to the first element of each list, then to the second, and so on. The iteration terminates when the shortest list runs out, and excess elements in other lists are ignored. The value returned is a list by the use of "nconc" rather than list (which is what "mapcar" uses).
+
+Example:
+In the following example, taken from the webpage "http://jtra.cz/stuff/lisp/sclr/mapcan.html", the function determines which numbers from the input list are greater than 0, then creates a new list with those corresponding numbers.
+
+(mapcan (lambda (x) (if (> x 0) (list x) nil)) '(-4 6 -23 1 0 12 )) => (6 1 12)
+
+
+1d.1: 
+Creating a hash table named 'a':
+(setq a (make-hash-table))
+
+1d.2: 
+Writing "name: jacob" into a hash table:
+(setf (gethash 'name a) 'jacob)
+
+1d.3: 
+Reading a value from a hash table:
+(gethash 'name a) => brown
+
+1e. 
+In lisp, sublis looks at all subtrees and leaves of tree; if a subtree or leaf appears as a key in alist (that is, the key and the subtree or leaf satisfy the test), it is replaced by the object with which that key is associated.
+
+Example:
+(sublis '( (a . b))   '(a a)) returns (B B)
+
+1f.
+Bind is a word used to describe giving a value to a variable. It normally occurs during application of a Prolog rule, or an attempt to satisfy the goals in a Prolog query.
+
