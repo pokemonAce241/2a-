@@ -1,3 +1,4 @@
+#!/usr/bin/env clisp
 ;  vim: set filetype=lisp tabstop=2 shiftwidth=2 expandtab : 
 
 #|
@@ -176,6 +177,32 @@ need to fix something inside `data0`.
 )
     
 ;--------- --------- --------- --------- --------- --------- ---------
+
+(defun known (x bindings)
+  (if (assoc x bindings)
+    (known (cdr(assoc x bindings)) bindings)
+    x
+  )
+)
+
+(defun has-vars (lst)
+  (if
+    (not lst)
+    (return-from has-vars nil)
+  )
+  (if
+    (var? lst)
+    (return-from has-vars (cons lst nil))
+  )
+  (if
+    (not (listp lst))
+    (return-from has-vars nil)
+  )
+  (union (has-vars (car lst))
+    (has-vars (cdr lst))
+  )
+)
+
 (defun unify (x y &optional binds)
   (cond 
     ((eql x y)        (values binds t))
