@@ -150,7 +150,8 @@ need to fix something inside `data0`.
         (male ?x)))
   (<- (sibling ?x ?y) 
       (and (parent ?z ?x)
-           (parent ?z ?y))))
+           (parent ?z ?y)
+           (not (= ?x ?y)))))
 
 
 ;--------- --------- --------- --------- --------- --------- ---------
@@ -230,12 +231,19 @@ need to fix something inside `data0`.
          (has-vars question))
    ,@body))))
 
+(defun show (var)
+  (format t "[~A]~C" var #\linefeed))
+
 (defun prove (expr &optional binds)
   (case (car expr)
-    (and  (ands        (reverse (cdr expr))   binds))
+    (and  (ands        (reverse (cdr expr))   binds)) ; reverse the expression 
     (or   (ors         (cdr  expr)            binds))
     (not  (negation    (cadr expr)            binds))
     (do   (evals       (cadr expr)            binds))
+    (>    (evalsp      expr                   binds))
+    (>=   (evalsp      expr                   binds))
+    (<    (evalsp      expr                   binds))
+    (<=   (evalsp      expr                   binds))
     (t    (prove1      (car  expr) (cdr expr) binds))))
 
 ;--------- --------- --------- --------- --------- --------- ---------
