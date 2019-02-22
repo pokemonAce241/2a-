@@ -32,5 +32,13 @@ Example:
 (sublis '( (a . b))   '(a a)) returns (B B)
 
 1f.
-Bind is a word used to describe giving a value to a variable. It normally occurs during application of a Prolog rule, or an attempt to satisfy the goals in a Prolog query.
+Bind is a word used to join or "bind" the list of assoc and cdrs. Binds is the car and cdr is the value that the car is binded to.
 
+1g.
+The reason that `(= ?x ?x)` works is because it is first initialized/created in the hash table. In this hash table, `=` has no antecedent. Because of this, the fact "two variables are equal if they are the same" stands.
+
+1h.
+`(gensym "?")` takes the string "?" and creates a unique symbol, which is guarenteed to not exist elsewhere in the whole system.
+
+1i.
+The reason that variable renaming is a must in this case is that, during the interference by Prolog, the evaluation of "child" in "daughter" would return false. The call would interpret the "parent" section to look like `(parent ?y ?x)` instead of `(parent ?x ?y)`, with the x and y's switched. A recursive call with this mistake present would cause a clash of the bindings. Simply put, recursion would not be possible without renaming.
