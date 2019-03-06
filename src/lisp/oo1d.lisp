@@ -246,14 +246,38 @@ TODO 2a. Define an object "cirle" with variables x,y
     "area" that returns 2 *pi*radius^2
 
 ; run this to peek inside circle
-'(xpand (circle))
+
 
 TODO 2b. Define an object "rectangle" with variables x1,x2,y1,y2
     that all default value of 0. Add
     a method "area" that returns the area of that rectangle
 TODO 2c. Show the output from the following test
 
+
+(defthing
+  account
+  :has  ((name) (balance 0) (interest-rate .05))
+  :does ((withdraw (amt)
+                     (decf balance amt))
+         (deposit (amt)
+                  (incf balance amt))
+         (interest ()
+                   (incf balance
+                         (* interest-rate balance)))))
+
 |#
+
+(defconstant PI 3.14159265)
+
+(defthing
+  circle
+  :has ((x), (y), (radius))
+  :does ((area ()
+               (* (* 2 PI) (expt radius 2))))
+)
+
+(xpand (circle))
+
 
 (defun polymorphism()
   (let ((sum 0)
@@ -263,6 +287,8 @@ TODO 2c. Show the output from the following test
     (dolist (one all)
       (incf sum (send one 'area)))
     (print `(polymorphism ,sum))))
+
+
 
 ; to run, uncomment the following
 '(polymorphism)
