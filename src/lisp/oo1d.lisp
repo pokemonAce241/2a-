@@ -1,5 +1,4 @@
-;  vim: set filetype=lisp tabstop=2 shiftwidth=2 expandtab :
-
+#!/usr/bin/env clisp
 #|
 In this assignment you will use the LISP macro system
 to learn that "objects" can be viewed as macros that
@@ -175,7 +174,7 @@ TODO 1c. Implement "data-as-case":
 
      (methods-as-case '((more (x) (+ x 1)) (less (x) (- x 1))))
      ==>
-     ((MORE (LAMBDA (X) (+ X 1))) 
+     ((MORE (LAMBDA (X) (+ X 1)))
       (LESS (LAMBDA (X) (- X 1))))
      
 
@@ -184,7 +183,20 @@ expand nicely:
 |#
 
 ; but first, uncomment this code
-'(defthing
+
+(defun datas-as-case (items)
+  (mapcar (lambda(x)
+          `(,x (lambda nil ,x)))
+          items))
+
+(defun methods-as-case (does)
+ (mapcar
+   (lambda (methodName)
+     `(,(car methodName) (lambda ,(car (cdr methodName)) ,(car (cdr (cdr methodName)))))
+   )
+ does))
+
+(defthing
   account
   :has  ((name) (balance 0) (interest-rate .05))
   :does ((withdraw (amt)
@@ -222,7 +234,7 @@ TODO 1f.. Show the output from the following function
 
 
 ; to run encapuatlion, uncomment the following
-'(encapsulation)
+(encapsulation)
 
 #|
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
