@@ -267,16 +267,22 @@ TODO 2c. Show the output from the following test
 
 |#
 
-(defconstant PI 3.14159265)
-
 (defthing
   circle
-  :has ((x), (y), (radius))
+  :has ((x) (y) (radius))
   :does ((area ()
-               (* (* 2 PI) (expt radius 2))))
+               (* pi (expt radius 2))))
 )
 
-(xpand (circle))
+(defthing
+  rectangle
+  :has ((x1 0) (x2 0) (y1 0) (y2 0))
+  :does ((area ()
+               (* (- x2 x1) (- y2 y1))))
+  
+)
+
+'(xpand (circle))
 
 
 (defun polymorphism()
@@ -291,7 +297,7 @@ TODO 2c. Show the output from the following test
 
 
 ; to run, uncomment the following
-'(polymorphism)
+(polymorphism)
 
 #|
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
