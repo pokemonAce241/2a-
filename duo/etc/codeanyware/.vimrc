@@ -1,6 +1,4 @@
-cat <<EOF
 autocmd BufEnter * silent! lcd %:p:h
-filetype plugin indent on
 set autoindent
 set background=light
 set backspace=indent,eol,start
@@ -18,19 +16,11 @@ set scrolloff=3
 set showmatch
 set smartcase
 set splitbelow
-set syntax=on
+"set syntax=on
 set title
 set visualbell
 set number
-syntax enable
+"syntax enable
 set fillchars+=vert:\ 
 colorscheme torte
 hi VertSplit guifg=#202020 guibg=#202020 gui=NONE ctermfg=DarkGray ctermbg=DarkGray cterm=NONE
-set paste
-
-if has("mouse_sgr")
-    set ttymouse=sgr
-else
-    set ttymouse=xterm2
-end
-EOF
