@@ -46,8 +46,6 @@ def domScore(idx):
                 # s2math = w * (b - a) / n
                 # s1 = s1 - pow(10, s1math)
                 # s2 = s2 - pow(10, s2math)
-                print('a: ' + str(a))
-                print('b: ' + str(b))
                 if a < b:
                     result = 1
                 else: 
