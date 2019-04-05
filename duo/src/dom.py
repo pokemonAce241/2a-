@@ -1,11 +1,19 @@
 import sys
 
+allowedSym = '?><$!'
+isFirst = True
+colSymDict = {}
 table = []
+highestValDict = {}
+lowestValDict = {}
 
 # def domScore():
     
 def spreadsheet(val, t, currentPos, length):
     if (currentPos != 0):
+        # if t is '?':
+            # Remove that column from the highestValDict
+
         tLength = len(table) - 1 if len(table) - 1 >= 0 else 0
         if (currentPos < (length - 1)):
             if (len(table) is 0):
@@ -39,17 +47,16 @@ def buildCell(val, t, currentPos, length):
 
 def lineIterator(line):
     cols = [x.strip() for x in line.split(',')]
-    colCount = 0
-    for col in cols:
-        buildCell(col, colSymDict[colCount], colCount, len(cols))
-        colCount = colCount + 1
+    if (len(cols) is len(colSymDict)):
+        colCount = 0
+        for col in cols:
+            if (float(col) > float(highestValDict[colCount])):
+                highestValDict[colCount] = col
+            if (float(col) < float(lowestValDict[colCount])):
+                lowestValDict[colCount] = col
+            buildCell(col, colSymDict[colCount], colCount, len(cols))
+            colCount = colCount + 1
 
-    # build the dom col
-    return cols
-
-allowedSym = '?><$!'
-isFirst = True
-colSymDict = {}
 for line in sys.stdin:
     cols = [x.strip() for x in line.split(',')]
     # Special case of first line
@@ -62,6 +69,10 @@ for line in sys.stdin:
                 colSymDict[colCount] = item[0]
             else:
                 colSymDict[colCount] = 'n'
+            # initialize the dict to keep track of highest val
+            highestValDict[colCount] = -sys.maxsize
+            # initialize the dict to keep track of lowest val
+            lowestValDict[colCount] = sys.maxsize
             colCount = colCount + 1
         isFirst = False
     else:
