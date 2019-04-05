@@ -50,25 +50,36 @@ def lineIterator(line):
     if (len(cols) is len(colSymDict)):
         colCount = 0
         for col in cols:
-            if (float(col) > float(highestValDict[colCount])):
-                highestValDict[colCount] = col
-            if (float(col) < float(lowestValDict[colCount])):
-                lowestValDict[colCount] = col
-            buildCell(col, colSymDict[colCount], colCount, len(cols))
-            colCount = colCount + 1
+            try:
+                if (float(col) > float(highestValDict[colCount])):
+                    highestValDict[colCount] = col
+                if (float(col) < float(lowestValDict[colCount])):
+                    lowestValDict[colCount] = col
+                buildCell(col, colSymDict[colCount], colCount, len(cols))
+                colCount = colCount + 1
+            except ValueError:
+                # Nothing, means there was a strange character
+                buildCell(col, colSymDict[colCount], colCount, len(cols))
+                colCount = colCount + 1
 
+firstLine = []
 for line in sys.stdin:
     cols = [x.strip() for x in line.split(',')]
     # Special case of first line
     if isFirst:
+
         # Create dict associating symbol with column number
         colCount = 0
         for item in cols:
+
             firstChar = item[0]
             if firstChar in allowedSym:
+                if firstChar is not '?':
+                    firstLine.append(item)
                 colSymDict[colCount] = item[0]
             else:
                 colSymDict[colCount] = 'n'
+                firstLine.append(item)
             # initialize the dict to keep track of highest val
             highestValDict[colCount] = -sys.maxsize
             # initialize the dict to keep track of lowest val
@@ -83,7 +94,10 @@ for item in table:
     if len(item) is 0:
         table.remove(item)
 
-# Only for Testing, TAKE OUT 
-for item in table:
-    print(item)
+
+# Printing the output with the appended dom column
+firstLine.append('dom')
+print('\t'.join([str(cell) for cell in firstLine]))
+print('\n'.join(['\t'.join([str(cell) for cell in row]) for row in table]))
+
 
