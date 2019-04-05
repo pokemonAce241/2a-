@@ -42,15 +42,14 @@ def domScore(idx):
                 b0 = nextCols[i]
                 a = numNorm(i, a0)
                 b = numNorm(i, b0)
-                # s1math = w * (a - b) / n
-                # s2math = w * (b - a) / n
-                # s1 = s1 - pow(10, s1math)
-                # s2 = s2 - pow(10, s2math)
-                if a < b:
-                    result = 1
-                else: 
-                    result = 0
-                return result
+                s1math = w * (a - b) / n
+                s2math = w * (b - a) / n
+                s1 = s1 - pow(10, s1math)
+                s2 = s2 - pow(10, s2math)
+                if(s1/n < s2/n):
+                    return (1/n)
+                else:
+                    return 0
     else:
         return lastDomScore
 
