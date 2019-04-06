@@ -14,7 +14,8 @@ DSL= dsl/monte_carlo -n 2000 -s 1729 -v False| dsl/brooks2
 
 ok:; @bash $(Etc)/lua2bin
 
-eg20:  ok; @$(hi); $(DSL) 
+myeg: ok; @$(hi); $(Auto) | python dom.py
+eg20: ok; @$(hi); $(DSL) 
 eg0:  ok; @$(hi); $(DSL) | dom | bestrest | super | rank
 eg0a: ok; @$(hi); $(DSL) | dom | bestrest | super
 eg0b: ok; @$(hi); $(DSL) 
