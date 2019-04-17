@@ -22,7 +22,7 @@ class Attribute {
  * TODO: Do I need the 'help' and 'metavar' values like his Python?
  */
 fun main(args: Array<String>) {
-    var seed:Int = 1 // 1 by default
+    var seed:Int = 1 // 1 by default, "var" because it can be reassigned
     var numRepeats:Int = 1 // 1 by default
 
     // Assign the values of -s and -n if they are included
@@ -55,15 +55,23 @@ fun main(args: Array<String>) {
 
     // Generates a random number within the bounds, adds to the row
     // prints out the row 'n' number of times (default=1)
-    val row = mutableMapOf<String, Double>();
-    val rand = Random(seed.toLong()) // Seed - val rand = Random(seed)
+    val rand = Random(seed.toLong())
     for (run in 1..numRepeats) {
-        for (item in attr) {
+        var finalStr = "{"
+        val attrIterator = attr.iterator()
+        while (attrIterator.hasNext()) {
+            val item = attrIterator.next()
             val value:Double = item.min + (item.max - item.min) * rand.nextDouble()
             val rounded:Double = String.format("%.2f", value).toDouble()
-            row[item.name] = rounded
+            finalStr = finalStr.plus("\'").plus(item.name).plus("\':")
+            finalStr = finalStr.plus(" ").plus(rounded)
+            if (!attrIterator.hasNext()) {
+                finalStr = finalStr.plus("}")
+            } else {
+                finalStr = finalStr.plus(", ")
+            }
         }
-        println(row)
+        println(finalStr)
     }
 
 }
