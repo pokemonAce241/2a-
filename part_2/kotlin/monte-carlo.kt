@@ -22,8 +22,8 @@ class Attribute {
  * TODO: Do I need the 'help' and 'metavar' values like his Python?
  */
 fun main(args: Array<String>) {
-    var seed = 1 // 1 by default
-    var numRepeats = 1 // 1 by default
+    var seed:Int = 1 // 1 by default
+    var numRepeats:Int = 1 // 1 by default
 
     // Assign the values of -s and -n if they are included
     for (arg in args) {
